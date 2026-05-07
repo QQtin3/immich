@@ -16,3 +16,13 @@ run = "uv run ruff format immich_ml"
 
 [tasks.check]
 run = "uv run mypy --strict immich_ml/"
+
+[tasks.checklist]
+run = [
+  { task = ":install" },
+  { task = ":format" },
+  { task = ":lint" },
+  { task = ":check" },
+  { task = ":test" },
+]
+
