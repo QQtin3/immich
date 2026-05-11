@@ -13323,6 +13323,15 @@
             }
           },
           {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "description": "Date to group and order assets by (takenAt for date taken, createdAt for date added to Immich)",
+            "schema": {
+              "$ref": "#/components/schemas/AssetOrderBy"
+            }
+          },
+          {
             "name": "personId",
             "required": false,
             "in": "query",
@@ -13510,6 +13519,15 @@
             "description": "Sort order for assets within time buckets (ASC for oldest first, DESC for newest first)",
             "schema": {
               "$ref": "#/components/schemas/AssetOrder"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "description": "Date to group and order assets by (takenAt for date taken, createdAt for date added to Immich)",
+            "schema": {
+              "$ref": "#/components/schemas/AssetOrderBy"
             }
           },
           {
@@ -16554,6 +16572,14 @@
         "enum": [
           "asc",
           "desc"
+        ],
+        "type": "string"
+      },
+      "AssetOrderBy": {
+        "description": "Asset sorting property",
+        "enum": [
+          "takenAt",
+          "createdAt"
         ],
         "type": "string"
       },
@@ -22914,6 +22940,14 @@
             "description": "Checksum",
             "type": "string"
           },
+          "createdAt": {
+            "description": "Uploaded to Immich at",
+            "example": "2024-01-01T00:00:00.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+            "type": "string"
+          },
           "deletedAt": {
             "description": "Deleted at",
             "example": "2024-01-01T00:00:00.000Z",
@@ -23014,6 +23048,7 @@
         },
         "required": [
           "checksum",
+          "createdAt",
           "deletedAt",
           "duration",
           "fileCreatedAt",
@@ -23039,6 +23074,14 @@
         "properties": {
           "checksum": {
             "description": "Checksum",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "Uploaded to Immich at",
+            "example": "2024-01-01T00:00:00.000Z",
+            "format": "date-time",
+            "nullable": true,
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
             "type": "string"
           },
           "deletedAt": {
@@ -23143,6 +23186,7 @@
         },
         "required": [
           "checksum",
+          "createdAt",
           "deletedAt",
           "duration",
           "fileCreatedAt",
@@ -24991,6 +25035,13 @@
             },
             "type": "array"
           },
+          "createdAt": {
+            "description": "Array of UTC timestamps when each asset was originally uploaded to Immich",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
           "duration": {
             "description": "Array of video/gif durations in milliseconds (null for static images)",
             "items": {
@@ -25121,6 +25172,7 @@
         "required": [
           "city",
           "country",
+          "createdAt",
           "duration",
           "fileCreatedAt",
           "id",
