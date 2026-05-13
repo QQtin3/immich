@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Kysely, OrderByDirection, Selectable, ShallowDehydrateObject, sql } from 'kysely';
+import { Kysely, OrderByDirection, Selectable, ShallowDehydrateObject, SqlBool, sql } from 'kysely';
 import { InjectKysely } from 'nestjs-kysely';
 import { DummyValue, GenerateSql } from 'src/decorators';
 import { AssetStatus, AssetType, AssetVisibility, VectorIndex } from 'src/enum';
@@ -405,7 +405,7 @@ export class SearchRepository {
                 .where('asset.visibility', '=', AssetVisibility.Timeline)
                 .where('asset.type', '=', AssetType.Image)
                 .where('asset.deletedAt', 'is', null)
-                .where(sql`(asset_exif.city, asset_exif.country) > (cte.city, cte.country)`)
+                .where(sql<SqlBool>`(asset_exif.city, asset_exif.country) > (cte.city, cte.country)`)
                 .orderBy('city')
                 .orderBy('country')
                 .limit(1)
