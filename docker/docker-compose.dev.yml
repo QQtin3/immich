@@ -76,7 +76,7 @@ services:
       - pnpm_store_server:/buildcache/pnpm-store
       - ../packages/plugins:/build/corePlugin
     env_file:
-      - .env
+      - stack.env
     environment:
       IMMICH_REPOSITORY: immich-app/immich
       IMMICH_REPOSITORY_URL: https://github.com/immich-app/immich
@@ -118,7 +118,7 @@ services:
       target: dev
     command: ['immich-web']
     env_file:
-      - .env
+      - stack.env
     ports:
       - 3000:3000
       - 24678:24678
@@ -148,7 +148,7 @@ services:
       - ../machine-learning/immich_ml:/usr/src/immich_ml
       - model_cache:/cache
     env_file:
-      - .env
+      - stack.env
     depends_on:
       - database
     restart: unless-stopped
@@ -165,7 +165,7 @@ services:
     container_name: immich_postgres
     image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
     env_file:
-      - .env
+      - stack.env
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
@@ -178,7 +178,7 @@ services:
     shm_size: 128mb
     healthcheck:
       disable: false
-  # set IMMICH_TELEMETRY_INCLUDE=all in .env to enable metrics
+  # set IMMICH_TELEMETRY_INCLUDE=all in stack.env to enable metrics
   # immich-prometheus:
   #   container_name: immich_prometheus
   #   ports:
