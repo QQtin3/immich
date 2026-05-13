@@ -382,36 +382,38 @@ export class SearchRepository {
       .withRecursive('cte', (qb) => {
         const base = qb
           .selectFrom('asset_exif')
-          .select(['city', 'assetId'])
+          .select(['city', 'country', 'assetId'])
           .innerJoin('asset', 'asset.id', 'asset_exif.assetId')
           .where('asset.ownerId', '=', anyUuid(userIds))
           .where('asset.visibility', '=', AssetVisibility.Timeline)
           .where('asset.type', '=', AssetType.Image)
           .where('asset.deletedAt', 'is', null)
           .orderBy('city')
+          .orderBy('country')
           .limit(1);
 
         const recursive = qb
           .selectFrom('cte')
-          .select(['l.city', 'l.assetId'])
+          .select(['l.city', 'l.country', 'l.assetId'])
           .innerJoinLateral(
             (qb) =>
               qb
                 .selectFrom('asset_exif')
-                .select(['city', 'assetId'])
+                .select(['city', 'country', 'assetId'])
                 .innerJoin('asset', 'asset.id', 'asset_exif.assetId')
                 .where('asset.ownerId', '=', anyUuid(userIds))
                 .where('asset.visibility', '=', AssetVisibility.Timeline)
                 .where('asset.type', '=', AssetType.Image)
                 .where('asset.deletedAt', 'is', null)
-                .whereRef('asset_exif.city', '>', 'cte.city')
+                .where(sql`(asset_exif.city, asset_exif.country) > (cte.city, cte.country)`)
                 .orderBy('city')
+                .orderBy('country')
                 .limit(1)
                 .as('l'),
             (join) => join.onTrue(),
           );
 
-        return sql<{ city: string; assetId: string }>`(${base} union all ${recursive})`;
+        return sql<{ city: string; country: string | null; assetId: string }>`(${base} union all ${recursive})`;
       })
       .selectFrom('asset')
       .innerJoin('asset_exif', 'asset.id', 'asset_exif.assetId')
@@ -424,6 +426,7 @@ export class SearchRepository {
           .as('exifInfo'),
       )
       .orderBy('asset_exif.city')
+      .orderBy('asset_exif.country')
       .execute();
   }
 
